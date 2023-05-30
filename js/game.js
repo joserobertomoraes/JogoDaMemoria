@@ -1,80 +1,73 @@
 const grid = document.querySelector('.grid');
 const spanPlayer = document.querySelector('.player');
 const timer = document.querySelector('.timer');
-// carregar todas as fotos!
+
+// Carregar todas as fotos!
 const character = [
-'circulo',
-'pentagano',
-'quadrado',
-'retangulo',
-'triangulo',
-
-
+    'circulo',
+    'pentagano',
+    'quadrado',
+    'retangulo',
+    'triangulo',
 ];
 
-
-
-//funcao criar elemento qualquer
+// Funcao criar elemento qualquer
 const createElement = (tag, className) => {
     const element = document.createElement(tag);
     element.className = className;
     return element;
 }
 
+let firstCard = '';
+let secondCard = '';
 
-let firstCard ='';
-let secundCard ='';
-
-
-
-
-checkEndGame= () =>{
-    
+// Função de verificação se o jogo terminou - Jogo termina quando todas as cartas
+// foram desabilitas, ou seja, acertadas
+checkEndGame = () => {
     const disableCards = document.querySelectorAll('.disableCard');
-    if(disableCards.length === 10){
-        setTimeout(() =>{ 
+    if (disableCards.length === 10) {
+        setTimeout(() => { 
             clearInterval(this.loop);
-            
             abrirModalComVideo();
-
-       } ,500);
-       
+        }, 500);
     }
 }
 
-const checkCards = ()=>{
-const firstCharacter = firstCard.getAttribute('data-character');
-const secundCharacter = secundCard.getAttribute('data-character');
+// Função de verificação se as duas cartas viradas são iguais ou não
+const checkCards = () => {
+    const firstCharacter = firstCard.getAttribute('data-character');
+    const secundCharacter = secondCard.getAttribute('data-character');
 
-if(firstCharacter === secundCharacter){
-firstCard.firstChild.classList.add('disableCard');
-secundCard.firstChild.classList.add('disableCard');
+    if (firstCharacter === secundCharacter) {
+        firstCard.firstChild.classList.add('disableCard');
+        secondCard.firstChild.classList.add('disableCard');
 
-firstCard ='';
-secundCard ='';
+        firstCard = '';
+        secondCard = '';
 
-checkEndGame();
-}else{
-    setTimeout(() =>{ 
-     firstCard.classList.remove('reveal-card');
-    secundCard.classList.remove('reveal-card');
+        checkEndGame();
+    } else {
+        setTimeout(() => { 
+            firstCard.classList.remove('reveal-card');
+            secondCard.classList.remove('reveal-card');
 
-     firstCard ='';
-     secundCard ='';
-} ,500);
+            firstCard = '';
+            secondCard = '';
+        }, 500);
+    }
 }
-}
-const revealCard = ({ target}) =>{
-    if(target.parentNode.className.includes('reveal-card')){
+
+const revealCard = ({ target }) => {
+    if (target.parentNode.className.includes('reveal-card')) {
         return;
     }
 
-    if(firstCard === ''){
+    if (firstCard === '') {
         target.parentNode.classList.add('reveal-card');
         firstCard = target.parentNode;
-    } else if(secundCard === ''){
+    } else if (secondCard === '') {
         target.parentNode.classList.add('reveal-card');
-        secundCard = target.parentNode;
+        secondCard = target.parentNode;
 
         checkCards();
     }
@@ -82,58 +75,58 @@ const revealCard = ({ target}) =>{
 }
 
 const createCard = (character) => {
-
-    //criar a div
-    const card =createElement('div','card');
+    // Criar o Card
+    const card = createElement('div','card');
     const front = createElement('div','face front');
     const back = createElement('div','face back');
 
     front.style.backgroundImage = `url('../img/${character}.svg')`;
-    
-   
-    // adicionando front e back como filha da div card
+
+    // Adicionando Frente e Verso como filhos da div Card
     card.appendChild(front);
     card.appendChild(back);
 
-    //adicionando a carta dentro do grid!
+    // Adicionando a carta dentro do grid
     grid.appendChild(card);
-
+    // Adicionando função de revelar carta ao clicar no Card na Div
     card.addEventListener('click', revealCard);
-        
-    card.setAttribute('data-character',character);
+    // Adicionando dados da carta no atributo da Div 
+    card.setAttribute('data-character', character);
+
     return card;
 }
 
-//funcao para gerar o jogo
-const loadGame = () =>{
-    const duplicateCaracter = [...character,...character];
-    const shuffledArray = duplicateCaracter.sort(() =>   Math.random() - 0.5);
-
-  
+// Funcao para gerar o jogo
+const loadGame = () => {
+    // Duplicando cartas
+    const duplicateCharacter = [...character, ...character];
+    // Sorteando a ordem das cartas
+    const shuffledArray = duplicateCharacter.sort(() => Math.random() - 0.5);
+    // Iterando encima das cartas sorteadas, criando cada carta e adicionando
+    // ao grid do jogo
     shuffledArray.forEach((character) => {
-    const card = createCard(character);
-    grid.appendChild(card);
+        const card = createCard(character);
+        grid.appendChild(card);
     })
 }
 
-const startTimer = () =>{
-    this.loop = setInterval(() =>{
+const startTimer = () => {
+    this.loop = setInterval(() => {
         const currentTime = +timer.innerHTML;
         timer.innerHTML = currentTime + 1;
-    },1000);
-
-
+    }, 1000);
 }
 
-
-function abrirModalComVideo() {
+const abrirModalComVideo = () => {
     modal.classList.add('active');
     videoModal.play();
-    setTimeout(()=>{window.location = '../index.html';},5000);
-  }
+    // Depois de 5 segundos, reseta o jogo e redireciona para a view de Login
+    setTimeout(() => {
+        window.location = '../index.html';
+    }, 5000);
+}
 
 window.onload = () => {
-   
     const playerName = localStorage.getItem('player');
     spanPlayer.innerHTML = playerName;
     startTimer();
