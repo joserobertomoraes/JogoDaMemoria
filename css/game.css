@@ -16,11 +16,22 @@ header {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 850px;
+  max-width: 900px;
   margin: 0 0 30px;
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.8);
   font-size: 1.2em;
+  padding: 16px;
+}
+
+svg {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+svg:hover {
+  fill: #4daae3;
 }
 
 .grid {
@@ -28,7 +39,7 @@ header {
   grid-template-columns: repeat(5,1fr);
   gap: 15px;
   width: 96%;
-  max-width: 850px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
