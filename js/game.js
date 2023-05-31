@@ -131,4 +131,25 @@ window.onload = () => {
     spanPlayer.innerHTML = playerName;
     startTimer();
     loadGame();
+    // Soltar o som MIDI
+    MIDI.loadPlugin({
+		soundfontUrl: "soundfont/",
+		instrument: "acoustic_grand_piano",
+		onsuccess: function() {
+            window.MIDI.Player.loadFile("/img/audioMidi.mid", onsuccess);
+		}
+	});
+    function onsuccess() {
+        window.MIDI.Player.start(); // start the MIDI track (you can put this in the loadFile callback)
+        window.MIDI.setVolume(0, 100);
+
+        MIDI.Player.addListener(function(data) { // set it to your own function!
+            var delay = 0; // play one note every quarter second
+            const note = data.note // the note
+            const velocity = data.velocity // the velocity of the note
+
+            window.MIDI.noteOn(0, note, velocity, delay);
+            window.MIDI.noteOff(0, note, delay);
+        })
+    };
 }
