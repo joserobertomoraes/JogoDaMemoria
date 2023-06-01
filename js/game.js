@@ -118,6 +118,12 @@ const startTimer = () => {
 }
 
 const abrirModalComVideo = () => {
+    window.MIDI.Player.stop();
+
+    var audio = new Audio('/img/audioParabens.mp3');
+    audio.play();
+
+    document.getElementById("videoModal").setAttribute("src", "/img/fim1.mp4")
     modal.classList.add('active');
     videoModal.play();
     // Depois de 5 segundos, reseta o jogo e redireciona para a view de Login
