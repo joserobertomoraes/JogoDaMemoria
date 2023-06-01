@@ -85,7 +85,6 @@ const createCard = (character) => {
     // Adicionando Frente e Verso como filhos da div Card
     card.appendChild(front);
     card.appendChild(back);
-
     // Adicionando a carta dentro do grid
     grid.appendChild(card);
     // Adicionando função de revelar carta ao clicar no Card na Div
@@ -118,12 +117,13 @@ const startTimer = () => {
 }
 
 const abrirModalComVideo = () => {
+    // Pausar audio MIDI
     window.MIDI.Player.stop();
-
+    // Play no audio MP3
     var audio = new Audio('/img/audioParabens.mp3');
     audio.play();
-
-    document.getElementById("videoModal").setAttribute("src", "/img/fim1.mp4")
+    // Play no vídeo MP4
+    document.getElementById("videoModal").setAttribute("src", "/img/fim.mp4")
     modal.classList.add('active');
     videoModal.play();
     // Depois de 5 segundos, reseta o jogo e redireciona para a view de Login
@@ -133,11 +133,14 @@ const abrirModalComVideo = () => {
 }
 
 window.onload = () => {
+    // Inserir nome do usuário (já inserido no login) no página do jogo
+    // Play no tempo de jogo
+    // Carregar jogo
     const playerName = localStorage.getItem('player');
     spanPlayer.innerHTML = playerName;
     startTimer();
     loadGame();
-    // Soltar o som MIDI
+    // Carregar biblioteca MIDI.js e audio MIDI na biblioteca
     MIDI.loadPlugin({
 		soundfontUrl: "soundfont/",
 		instrument: "acoustic_grand_piano",
@@ -146,13 +149,15 @@ window.onload = () => {
 		}
 	});
     function onsuccess() {
-        window.MIDI.Player.start(); // start the MIDI track (you can put this in the loadFile callback)
+        // Play audio MIDI
+        // Setar volume
+        window.MIDI.Player.start();
         window.MIDI.setVolume(0, 100);
 
-        MIDI.Player.addListener(function(data) { // set it to your own function!
-            var delay = 0; // play one note every quarter second
-            const note = data.note // the note
-            const velocity = data.velocity // the velocity of the note
+        MIDI.Player.addListener(function(data) {
+            var delay = 0;
+            const note = data.note
+            const velocity = data.velocity
 
             window.MIDI.noteOn(0, note, velocity, delay);
             window.MIDI.noteOff(0, note, delay);
